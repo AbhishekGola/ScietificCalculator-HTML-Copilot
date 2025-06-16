@@ -1,80 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows-style Calculator</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #202020; color: white; }
-        .calculator { width: 320px; margin: auto; padding: 15px; border-radius: 10px; background-color: #333; }
-        #display { width: 95%; height: 60px; font-size: 24px; text-align: right; padding: 10px; border: none; border-radius: 5px; background-color: #444; color: white; }
-        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
-        button { padding: 15px; font-size: 22px; border: none; border-radius: 8px; background-color: #555; color: white; cursor: pointer; }
-        button:active { background-color: #777; }
-        .scientific { display: none; grid-template-columns: repeat(4, 1fr); }
-        #toggle { width: 100%; background-color: #ff8800; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows-Style Scientific Calculator</title>
+  <style>
+    body {
+      background-color: #202020;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .calculator {
+      background-color: #333;
+      border-radius: 10px;
+      padding: 20px;
+      width: 320px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    #display {
+      width: 100%;
+      height: 60px;
+      margin-bottom: 10px;
+      font-size: 28px;
+      text-align: right;
+      border: none;
+      border-radius: 5px;
+      background-color: #444;
+      color: white;
+      padding-right: 10px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    button {
+      padding: 15px;
+      font-size: 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #555;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    button:active {
+      background-color: #777;
+      transform: scale(0.98);
+    }
+    /* The toggle button spans the full width */
+    #toggle {
+      grid-column: span 4;
+      background-color: #ff8800;
+    }
+    /* Scientific buttons container */
+    .scientific-buttons {
+      display: none;
+      margin-top: 10px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h2>Windows-style Calculator</h2>
-    <div class="calculator">
-        <input type="text" id="display" disabled>
-        <div class="buttons">
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="appendValue('/')">÷</button>
-            <button onclick="appendValue('*')">×</button>
-            <button onclick="appendValue('-')">−</button>
-
-            <button onclick="appendValue('7')">7</button>
-            <button onclick="appendValue('8')">8</button>
-            <button onclick="appendValue('9')">9</button>
-            <button onclick="appendValue('+')">+</button>
-
-            <button onclick="appendValue('4')">4</button>
-            <button onclick="appendValue('5')">5</button>
-            <button onclick="appendValue('6')">6</button>
-            <button onclick="calculateResult()">=</button>
-
-            <button onclick="appendValue('1')">1</button>
-            <button onclick="appendValue('2')">2</button>
-            <button onclick="appendValue('3')">3</button>
-            <button onclick="appendValue('0')">0</button>
-
-            <button onclick="appendValue('.')">.</button>
-            <button id="toggle" onclick="toggleScientific()">Scientific</button>
-        </div>
-        <div class="buttons scientific">
-            <button onclick="appendValue('Math.sin(')">sin</button>
-            <button onclick="appendValue('Math.cos(')">cos</button>
-            <button onclick="appendValue('Math.tan(')">tan</button>
-            <button onclick="appendValue('Math.sqrt(')">√</button>
-            <button onclick="appendValue('Math.pow(')">xⁿ</button>
-            <button onclick="appendValue('Math.log(')">log</button>
-            <button onclick="appendValue('Math.exp(')">exp</button>
-            <button onclick="appendValue('Math.PI')">π</button>
-        </div>
+  <div class="calculator">
+    <input type="text" id="display" disabled>
+    <div class="buttons">
+      <!-- General Calculator Buttons -->
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="appendValue('/')">÷</button>
+      <button onclick="appendValue('*')">×</button>
+      <button onclick="appendValue('-')">−</button>
+      
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button onclick="appendValue('+')">+</button>
+      
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button onclick="calculateResult()">=</button>
+      
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button onclick="appendValue('0')">0</button>
+      
+      <button onclick="appendValue('.')">.</button>
+      <button id="toggle" onclick="toggleScientific()">Scientific</button>
     </div>
-    <script>
-        function appendValue(val) {
-            document.getElementById('display').value += val;
-        }
+    <div class="buttons scientific-buttons" id="scientific-buttons">
+      <!-- Scientific buttons apply functions immediately on the current value -->
+      <button onclick="applySin()">sin</button>
+      <button onclick="applyCos()">cos</button>
+      <button onclick="applyTan()">tan</button>
+      <button onclick="applySqrt()">√</button>
+      
+      <!-- xⁿ is a two-step operation -->
+      <button onclick="preparePowerOperation()">xⁿ</button>
+      <!-- ln here uses natural logarithm -->
+      <button onclick="applyLog()">ln</button>
+      <button onclick="applyExp()">exp</button>
+      <button onclick="insertPi()">π</button>
+    </div>
+  </div>
 
-        function clearDisplay() {
-            document.getElementById('display').value = '';
-        }
+  <script>
+    let pendingPower = null; // Holds the base for the xⁿ operation
 
-        function calculateResult() {
-            try {
-                document.getElementById('display').value = eval(document.getElementById('display').value);
-            } catch {
-                document.getElementById('display').value = 'Error';
-            }
-        }
+    // Appends numbers or operators to the display
+    function appendValue(val) {
+      const display = document.getElementById('display');
+      display.value += val;
+    }
 
-        function toggleScientific() {
-            let sciButtons = document.querySelector('.scientific');
-            sciButtons.style.display = sciButtons.style.display === 'grid' ? 'none' : 'grid';
+    // Clears the display and resets any pending scientific operation
+    function clearDisplay() {
+      document.getElementById('display').value = '';
+      pendingPower = null;
+    }
+
+    // Evaluates the expression or applies any pending power operation
+    function calculateResult() {
+      const display = document.getElementById('display');
+      if (pendingPower !== null) {
+        // Expecting the exponent in the display for xⁿ operation
+        const exponent = parseFloat(display.value);
+        if (isNaN(exponent)) {
+          display.value = 'Error';
+        } else {
+          display.value = Math.pow(pendingPower, exponent);
         }
-    </script>
+        pendingPower = null;
+      } else {
+        // Evaluate a general expression using eval()
+        try {
+          display.value = eval(display.value);
+        } catch (e) {
+          display.value = 'Error';
+        }
+      }
+    }
+
+    // Toggles the visibility of scientific buttons
+    function toggleScientific() {
+      const sciDiv = document.getElementById('scientific-buttons');
+      if (sciDiv.style.display === 'none' || sciDiv.style.display === '') {
+        sciDiv.style.display = 'grid';
+      } else {
+        sciDiv.style.display = 'none';
+      }
+    }
+
+    // Applies a scientific function (e.g., sin, cos) immediately on the current value
+    function applyScientific(func) {
+      const display = document.getElementById('display');
+      const current = parseFloat(display.value);
+      if (isNaN(current)) {
+        display.value = 'Error';
+        return;
+      }
+      const result = func(current);
+      display.value = result;
+    }
+
+    function applySin() { applyScientific(Math.sin); }
+    function applyCos() { applyScientific(Math.cos); }
+    function applyTan() { applyScientific(Math.tan); }
+    function applySqrt() { applyScientific(Math.sqrt); }
+    function applyLog() { applyScientific(Math.log); }  // Natural log (ln)
+    function applyExp() { applyScientific(Math.exp); }
+
+    // Inserts the value of PI into the display
+    function insertPi() {
+      document.getElementById('display').value = Math.PI;
+    }
+
+    // Prepares for a power operation (xⁿ) by storing the current number as the base
+    function preparePowerOperation() {
+      const display = document.getElementById('display');
+      const base = parseFloat(display.value);
+      if (isNaN(base)) {
+        display.value = 'Error';
+        return;
+      }
+      pendingPower = base;
+      display.value = ''; // Clear to enter the exponent
+    }
+  </script>
 </body>
 </html>
