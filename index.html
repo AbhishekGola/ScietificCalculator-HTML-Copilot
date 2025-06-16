@@ -3,24 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scientific Calculator</title>
+    <title>Windows-style Calculator</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .calculator { width: 250px; margin: auto; }
-        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        button { padding: 10px; font-size: 18px; }
-        .scientific { display: none; }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #202020; color: white; }
+        .calculator { width: 320px; margin: auto; padding: 15px; border-radius: 10px; background-color: #333; }
+        #display { width: 95%; height: 60px; font-size: 24px; text-align: right; padding: 10px; border: none; border-radius: 5px; background-color: #444; color: white; }
+        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+        button { padding: 15px; font-size: 22px; border: none; border-radius: 8px; background-color: #555; color: white; cursor: pointer; }
+        button:active { background-color: #777; }
+        .scientific { display: none; grid-template-columns: repeat(4, 1fr); }
+        #toggle { width: 100%; background-color: #ff8800; }
     </style>
 </head>
 <body>
-    <h2>Scientific Calculator</h2>
+    <h2>Windows-style Calculator</h2>
     <div class="calculator">
         <input type="text" id="display" disabled>
         <div class="buttons">
             <button onclick="clearDisplay()">C</button>
-            <button onclick="appendValue('/')">/</button>
-            <button onclick="appendValue('*')">*</button>
-            <button onclick="appendValue('-')">-</button>
+            <button onclick="appendValue('/')">÷</button>
+            <button onclick="appendValue('*')">×</button>
+            <button onclick="appendValue('-')">−</button>
 
             <button onclick="appendValue('7')">7</button>
             <button onclick="appendValue('8')">8</button>
@@ -38,7 +41,7 @@
             <button onclick="appendValue('0')">0</button>
 
             <button onclick="appendValue('.')">.</button>
-            <button onclick="toggleScientific()">Sci</button>
+            <button id="toggle" onclick="toggleScientific()">Scientific</button>
         </div>
         <div class="buttons scientific">
             <button onclick="appendValue('Math.sin(')">sin</button>
